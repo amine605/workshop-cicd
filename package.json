@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "node index.js"
+    "start": "node index.js",
+    "inheritance-security-check": "retire"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "jest": "^24.9.0",
+    "retire": "^2.0.3",
     "supertest": "^4.0.2"
   }
 }

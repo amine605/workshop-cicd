@@ -6,10 +6,12 @@ workflows:
     jobs:
       - build
       - secrets_check
+      - inheritance_security_check
       - deploy_production:
           requires:
             - build
             - secrets_check
+            - inheritance_security_check
 
 jobs:
   build:
@@ -36,6 +38,7 @@ jobs:
           only-branch: master
   
   secrets_check:
+
     docker:
       - image: circleci/node
     working_directory: ~/repo
@@ -52,3 +55,12 @@ jobs:
       - run:
           name: Secrets check
           command: "git secrets --scan"
+
+inheritance_security_check:
+  docker:
+    - image: circleci/node
+  working_directory: ~/repo
+  steps:
+    - checkout
+    - run: yarn install
+    - run: yarn inheritance-security-check
