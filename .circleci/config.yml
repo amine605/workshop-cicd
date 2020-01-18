@@ -7,16 +7,18 @@ workflows:
       - build
       - secrets_check
       - inheritance_security_check
-      
+
       - deploy_staging:
           requires:
             - build
             - secrets_check
             - inheritance_security_check
-
-      - deploy_production:
+      - dast_check:
           requires:
             - deploy_staging
+      - deploy_production:
+          requires:
+            - dast_check
           
 jobs:
   build:
@@ -81,3 +83,16 @@ jobs:
       - checkout
       - run: yarn install
       - run: yarn inheritance-security-check
+
+  dast_check:
+    docker:
+      - image: circleci/node
+    steps:
+      - run:
+          name: Cloning Vaddy
+          command: "git clone https://github.com/vaddy/go-vaddy.git"
+      - run:
+          name: Security check
+          command: |
+            cd ./go-vaddy/bin/
+            ./vaddy-linux-64bit"
