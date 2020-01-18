@@ -5,9 +5,11 @@ workflows:
   build_deploy:
     jobs:
       - build
+      - secrets_check
       - deploy_production:
           requires:
             - build
+            - secrets_check
 
 jobs:
   build:
@@ -21,7 +23,6 @@ jobs:
       - run: yarn install
       - run: yarn test
 
-
   deploy_production:
     environment:
       HEROKU_APP_NAME: "workshop-cicd-production"
@@ -33,3 +34,21 @@ jobs:
       - heroku/deploy-via-git:
 
           only-branch: master
+  
+  secrets_check:
+    docker:
+      - image: circleci/node
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Installing Git Secrets
+          command: |
+            git clone https://github.com/awslabs/git-secrets.git git-secrets
+            cd git-secrets && sudo make install && cd .. && rm -rf git-secrets
+      - run:
+          name: Adding Git Secrets providers
+          command: "git secrets --register-aws"
+      - run:
+          name: Secrets check
+          command: "git secrets --scan"
