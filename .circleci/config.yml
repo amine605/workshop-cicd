@@ -7,12 +7,17 @@ workflows:
       - build
       - secrets_check
       - inheritance_security_check
-      - deploy_production:
+      
+      - deploy_staging:
           requires:
             - build
             - secrets_check
             - inheritance_security_check
 
+      - deploy_production:
+          requires:
+            - deploy_staging
+          
 jobs:
   build:
     docker:
@@ -28,6 +33,18 @@ jobs:
   deploy_production:
     environment:
       HEROKU_APP_NAME: "workshop-cicd-production"
+    executor: heroku/default
+    steps:
+
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git:
+
+          only-branch: master
+  
+  deploy_staging:
+    environment:
+      HEROKU_APP_NAME: "workshop-cicd-staging"
     executor: heroku/default
     steps:
 
