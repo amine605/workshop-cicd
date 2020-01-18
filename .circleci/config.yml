@@ -6,8 +6,8 @@ workflows:
     jobs:
       - build
       - deploy_production:
-        requires:
-          - build
+          requires:
+            - build
 
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
 
   deploy_production:
     environment:
-      HEROKU_APP_NAME: workshop-cicd-production
+      HEROKU_APP_NAME: "workshop-cicd-production"
     executor: heroku/default
     steps:
 
