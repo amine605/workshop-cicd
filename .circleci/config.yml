@@ -21,12 +21,15 @@ jobs:
       - run: yarn install
       - run: yarn test
 
+
   deploy_production:
     environment:
       HEROKU_APP_NAME: workshop-cicd-production
     executor: heroku/default
     steps:
+
       - checkout
       - heroku/install
       - heroku/deploy-via-git:
+
           only-branch: master
