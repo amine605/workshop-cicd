@@ -95,4 +95,4 @@ jobs:
           name: Security check
           command: |
             cd ./go-vaddy/bin/
-            ./vaddy-linux-64bit"
+            ./vaddy-linux-64bit
